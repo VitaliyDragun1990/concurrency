@@ -41,7 +41,7 @@ public class Transfer implements Callable<Boolean> {
 			throw new InsufficientFundsException("Not enought funds to transfer");
 		}
 		
-		// Random delay for simulating possible deadlock
+		// Random delay for simulating possible deadlock occurrence
 		Thread.sleep((long) (Math.random()*1500));
 		
 		if (accountFrom.getLock().tryLock(waitTimeForLock, TimeUnit.MILLISECONDS)) {
