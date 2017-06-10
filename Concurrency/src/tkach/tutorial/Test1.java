@@ -10,5 +10,9 @@ public class Test1 {
 		// TODO Auto-generated method stub
 
 	}
+	
+	public static void testMethod() {
+		// Some test here.
+	}
 
 }
