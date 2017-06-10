@@ -2,6 +2,7 @@ package tkach.tutorial;
 
 import java.time.LocalDateTime;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class Transfer implements Callable<Boolean> {
@@ -9,6 +10,7 @@ public class Transfer implements Callable<Boolean> {
 	private Account accountFrom;
 	private Account accountTo;
 	private int amount;
+	private CountDownLatch startLatch;
 	
 	private final static long waitTimeForLock = 1500;
 	
@@ -17,9 +19,23 @@ public class Transfer implements Callable<Boolean> {
 		accountTo = to;
 		this.amount = amount;
 	}
+	
+	public Transfer(Account from, Account to, int amount, CountDownLatch latch) {
+		this(from, to, amount);
+		startLatch = latch;
+	}
 
 	@Override
 	public Boolean call() throws Exception {
+		
+		if (startLatch != null) {
+			System.out.println("["+Thread.currentThread().getName()+"]" + 
+		"Waitng to start...");
+			
+			startLatch.await();
+			
+			System.out.println("["+Thread.currentThread().getName()+"]" + " has started now.");
+		}
 		
 		if (accountFrom.getBalance() < amount) {
 			throw new InsufficientFundsException("Not enought funds to transfer");
